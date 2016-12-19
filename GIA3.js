@@ -2,12 +2,12 @@ function importData() {
   var fSource = DriveApp.getFolderById('0B5SBa_g3SMstb0ozMi1mbHBZaDA'); // reports_folder_id = id of folder where csv reports are saved
   var fi = fSource.getFilesByName('report.csv'); // latest report file
   var ss = SpreadsheetApp.openById('1119IY4cV3TPsMnRVk9HWhkE61Y62xOxY0-fNEkBCr44'); // data_sheet_id = id of spreadsheet that holds the data to be updated with new report data
+//test
+  
 
-  
-  
     // variables being used i, j, k, n, m, a, d, x
   var threads = GmailApp.search('label:ktf-inbox from:giasupport@gia.edu subject:invoices label:unread') //search gmail with the given query(partial name using * as a wildcard to find anything in the current subject name).
-  var msgs = GmailApp.getMessagesForThreads(threads); //retrieve all messages in the specified threads. 
+  var msgs = GmailApp.getMessagesForThreads(threads); //retrieve all messages in the specified threads.
   //var sheet = SpreadsheetApp.create('test_filename', 2, 8); //creates a new spreadsheet in case I need to create it on a separate file.
   //you can get the id from your own google spreadsheet in your browser bar.
   //var sheet = SpreadsheetApp.openById('1119IY4cV3TPsMnRVk9HWhkE61Y62xOxY0-fNEkBCr44').getSheetByName('Sheet1');
@@ -25,9 +25,9 @@ function importData() {
         to get the attachment name, 8 is used because this is how many letters are in the string. Finally we create the stringValue variable and compare to see which
         attachments meet the criteria that we are looking for and return only that attachment.*/
         var attachmentName = attachments[k].getName();
- 
-  
-  
+
+
+
 
     var file = attachments[k];
     var csv = file.getDataAsString();
