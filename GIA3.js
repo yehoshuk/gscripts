@@ -1,19 +1,23 @@
 
 function importData() {
-
+Logger.log('Starting');
   var ss = SpreadsheetApp.openById('1119IY4cV3TPsMnRVk9HWhkE61Y62xOxY0-fNEkBCr44'); // data_sheet_id = id of spreadsheet that holds the data to be updated with new report data
   var newsheet = ss.insertSheet('NEWDATA'); // create a 'NEWDATA' sheet to store imported data
+Logger.log('Sheet inserted');
 
   // variables being used i, j, k, n, m, a, d, x
 
   //search gmail with the given query(partial name using * as a wildcard to find anything in the current subject name).
   var threads = GmailApp.search('label:ktf-inbox from:giasupport@gia.edu subject:invoices label:unread')
-
+Logger.log('gmail searched');
+  
   //retrieve all messages _IN THREADS_ using the specified search string.
   var msgs = GmailApp.getMessagesForThreads(threads);
+Logger.log('threads gotten');
 
   //iterate through each message _THREAD_ that gmail search found
   for (var i = 0; i < msgs.length; i++) {
+Logger.log('Going through message i = ' + i);
 
     //iterate through each message _IN EACH THREAD_ that gmail search found
     for (var j = 0; j < msgs[i].length; j++) {
