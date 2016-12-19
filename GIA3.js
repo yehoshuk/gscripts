@@ -1,9 +1,10 @@
+
 function importData() {
 
   var ss = SpreadsheetApp.openById('1119IY4cV3TPsMnRVk9HWhkE61Y62xOxY0-fNEkBCr44'); // data_sheet_id = id of spreadsheet that holds the data to be updated with new report data
+  var newsheet = ss.insertSheet('NEWDATA'); // create a 'NEWDATA' sheet to store imported data
 
   // variables being used i, j, k, n, m, a, d, x
-
 
   //search gmail with the given query(partial name using * as a wildcard to find anything in the current subject name).
   var threads = GmailApp.search('label:ktf-inbox from:giasupport@gia.edu subject:invoices label:unread')
@@ -24,27 +25,22 @@ function importData() {
       for (var k = 0; k < attachments.length; k++) {
 
         var attachmentName = attachments[k].getName();
-
-
-
-
-    var file = attachments[k];
-    var csv = file.getDataAsString();
-    var csvData = CSVToArray(csv); // see below for CSVToArray function
-    var newsheet = ss.insertSheet('NEWDATA'); // create a 'NEWDATA' sheet to store imported data
-    // loop through csv data array and insert (append) as rows into 'NEWDATA' sheet
-    for ( var i=0, lenCsv=csvData.length; i<lenCsv; i++ ) {
-      newsheet.getRange(i+1, 1, 1, csvData[i].length).setValues(new Array(csvData[i]));
+          var file = attachments[k];
+          var csv = file.getDataAsString();
+          // loop through csv data array and insert (append) as rows into 'NEWDATA' sheet
+            for ( var i=0, lenCsv=csvData.length; i<lenCsv; i++ ) {
+              newsheet.getRange(i+1, 1, 1, csvData[i].length).setValues(new Array(csvData[i]));
     }
     /*
     ** report data is now in 'NEWDATA' sheet in the spreadsheet - process it as needed,
     ** then delete 'NEWDATA' sheet using ss.deleteSheet(newsheet)
     */
-    // rename the report.csv file so it is not processed on next scheduled run
-    file.setName("report-"+(new Date().toString())+".csv");
-      }
-    } // messages in thread search
-  } //gmail thread iteration
+    // change the labels on the gmail messages so that they are not processed on next scheduled run
+      // change label code to go here
+
+      } //iteration through attachments
+    } // iteration through messages
+  } // iteration through threads
 };
 
 
