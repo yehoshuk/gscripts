@@ -26,7 +26,8 @@ function importData() {
 
         var attachmentName = attachments[k].getName();
           var file = attachments[k];
-          var csv = file.getDataAsString();
+            var csv = file.getDataAsString();
+              var csvData = CSVToArray(csv); // see below for CSVToArray function
           // loop through csv data array and insert (append) as rows into 'NEWDATA' sheet
             for ( var i=0, lenCsv=csvData.length; i<lenCsv; i++ ) {
               newsheet.getRange(i+1, 1, 1, csvData[i].length).setValues(new Array(csvData[i]));
