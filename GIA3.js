@@ -13,6 +13,10 @@ function importData() {
   //var sheet = SpreadsheetApp.openById('1119IY4cV3TPsMnRVk9HWhkE61Y62xOxY0-fNEkBCr44').getSheetByName('Sheet1');
   //sheet.clearContents(); //clears all the data in the specified tab, the code below will recreate the dataset once again.
 
+  var firstThread = GmailApp.getInboxThreads(0,1)[0];
+  Logger.log(firstThread.getMessageCount());
+
+  
   var newsheet = ss.insertSheet('NEWDATA'); // create a 'NEWDATA' sheet to store imported data
 
   for (var i = 0; i < msgs.length; i++) {
@@ -35,6 +39,7 @@ function importData() {
         Logger.log(' - attachment k name = ' + attachmentName);
 
     var file = attachments[k];
+    Logger.log(' - file = ' + attachments[k].name);
     var csv = file.getDataAsString();
     var csvData = CSVToArray(csv); // see below for CSVToArray function
 
