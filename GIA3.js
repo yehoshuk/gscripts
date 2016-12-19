@@ -10,23 +10,25 @@ Logger.log('Sheet inserted');
   //search gmail with the given query(partial name using * as a wildcard to find anything in the current subject name).
   var threads = GmailApp.search('label:ktf-inbox from:giasupport@gia.edu subject:invoices label:unread')
 Logger.log('gmail searched');
-  
+
   //retrieve all messages _IN THREADS_ using the specified search string.
   var msgs = GmailApp.getMessagesForThreads(threads);
 Logger.log('threads gotten');
 
   //iterate through each message _THREAD_ that gmail search found
   for (var i = 0; i < msgs.length; i++) {
-Logger.log('Going through message i = ' + i);
+Logger.log('Going through thread i = ' + i);
 
     //iterate through each message _IN EACH THREAD_ that gmail search found
     for (var j = 0; j < msgs[i].length; j++) {
+Logger.log('Going through message j = ' + j);
 
       var emailDate = msgs[i][j].getDate(); //not doing anything with this at the moment
       var attachments = msgs[i][j].getAttachments(); //not doing anything with this at the moment
 
       //iterate through each attachment in each message
       for (var k = 0; k < attachments.length; k++) {
+Logger.log('Going through attachment k = ' + k);
 
         var attachmentName = attachments[k].getName();
           var file = attachments[k];
