@@ -1,46 +1,61 @@
-
 function importData() {
-
+  var fSource = DriveApp.getFolderById('0B5SBa_g3SMstb0ozMi1mbHBZaDA'); // reports_folder_id = id of folder where csv reports are saved
+  var fi = fSource.getFilesByName('report.csv'); // latest report file
   var ss = SpreadsheetApp.openById('1119IY4cV3TPsMnRVk9HWhkE61Y62xOxY0-fNEkBCr44'); // data_sheet_id = id of spreadsheet that holds the data to be updated with new report data
+
+
+
+    // variables being used i, j, k, n, m, a, d, x
+  var threads = GmailApp.search('label:ktf-inbox from:giasupport@gia.edu subject:invoices label:unread') //search gmail with the given query(partial name using * as a wildcard to find anything in the current subject name).
+  var msgs = GmailApp.getMessagesForThreads(threads); //retrieve all messages in the specified threads.
+  //var sheet = SpreadsheetApp.create('test_filename', 2, 8); //creates a new spreadsheet in case I need to create it on a separate file.
+  //you can get the id from your own google spreadsheet in your browser bar.
+  //var sheet = SpreadsheetApp.openById('1119IY4cV3TPsMnRVk9HWhkE61Y62xOxY0-fNEkBCr44').getSheetByName('Sheet1');
+  //sheet.clearContents(); //clears all the data in the specified tab, the code below will recreate the dataset once again.
+
+  var firstThread = GmailApp.getInboxThreads(0,1)[0];
+  Logger.log(firstThread.getMessageCount());
+
+  
   var newsheet = ss.insertSheet('NEWDATA'); // create a 'NEWDATA' sheet to store imported data
 
-  // variables being used i, j, k, n, m, a, d, x
-
-  //search gmail with the given query(partial name using * as a wildcard to find anything in the current subject name).
-  var threads = GmailApp.search('label:ktf-inbox from:giasupport@gia.edu subject:invoices label:unread')
-
-  //retrieve all messages _IN THREADS_ using the specified search string.
-  var msgs = GmailApp.getMessagesForThreads(threads);
-
-  //iterate through each message _THREAD_ that gmail search found
   for (var i = 0; i < msgs.length; i++) {
-
-    //iterate through each message _IN EACH THREAD_ that gmail search found
+    Logger.log('Going through thread i = ' + i);
     for (var j = 0; j < msgs[i].length; j++) {
-
-      var emailDate = msgs[i][j].getDate(); //not doing anything with this at the moment
-      var attachments = msgs[i][j].getAttachments(); //not doing anything with this at the moment
-
-      //iterate through each attachment in each message
+      Logger.log('Going through message j = ' + j);
+      var emailDate = msgs[i][j].getDate();
+      var attachments = msgs[i][j].getAttachments();
       for (var k = 0; k < attachments.length; k++) {
 
+        Logger.log('Going through attachment k = ' + k);
+        Logger.log(' - attachment k length = ' + attachments[k].length);
+
+        /*search for the attachment by name, stringLen returns the start position number of the word 'filename' ignoring any previous characters, counting starts at 0.
+        e.g. "test_filename", will output the number 6 "test_" will ends at 5 and 6 will start at "f" for filename. Than we use substring to get the actual name out of
+        attachment name then we use the stringLen variable as a starting position and also as an end position plus the number of characters in word I'm searching for
+        to get the attachment name, 8 is used because this is how many letters are in the string. Finally we create the stringValue variable and compare to see which
+        attachments meet the criteria that we are looking for and return only that attachment.*/
         var attachmentName = attachments[k].getName();
-          var file = attachments[k];
-          var csv = file.getDataAsString();
-          // loop through csv data array and insert (append) as rows into 'NEWDATA' sheet
-            for ( var i=0, lenCsv=csvData.length; i<lenCsv; i++ ) {
-              newsheet.getRange(i+1, 1, 1, csvData[i].length).setValues(new Array(csvData[i]));
+        Logger.log(' - attachment k name = ' + attachmentName);
+
+    var file = attachments[k];
+    Logger.log(' - file = ' + attachments[k].name);
+    var csv = file.getDataAsString();
+    var csvData = CSVToArray(csv); // see below for CSVToArray function
+
+    // loop through csv data array and insert (append) as rows into 'NEWDATA' sheet
+    for ( var i=0, lenCsv=csvData.length; i<lenCsv; i++ ) {
+      newsheet.getRange(i+1, 1, 1, csvData[i].length).setValues(new Array(csvData[i]));
     }
     /*
     ** report data is now in 'NEWDATA' sheet in the spreadsheet - process it as needed,
     ** then delete 'NEWDATA' sheet using ss.deleteSheet(newsheet)
     */
-    // change the labels on the gmail messages so that they are not processed on next scheduled run
-      // change label code to go here
-
-      } //iteration through attachments
-    } // iteration through messages
-  } // iteration through threads
+    // rename the report.csv file so it is not processed on next scheduled run
+    //file.setName("report-"+(new Date().toString())+".csv");
+      }
+    }
+  }
 };
 
 
